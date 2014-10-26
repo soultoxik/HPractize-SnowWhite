@@ -1,0 +1,12 @@
+name:           SnowWhiteAndGnomes
+version:        0.1
+cabal-version:  >=1.2
+build-type:     Simple
+author:         maxim
+
+executable SnowWhiteAndGnomes
+  hs-source-dirs:  src
+  main-is:         Main.hs
+  build-depends:   base >= 4
+  ghc-options:     -Wall -O3
+
