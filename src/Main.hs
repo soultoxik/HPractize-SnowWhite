@@ -1,7 +1,6 @@
 {-# LANGUAGE FlexibleInstances, RankNTypes #-}
 module Main where
 import Data.List
-import Control.Monad
 
 
 data Gnome = Gnome {    number :: Integer,
@@ -14,12 +13,6 @@ instance Ord Gnome where
         
 instance Show Gnome where
         show = show.number
-
-parseGnomeParams :: String -> (Integer, Integer)
-parseGnomeParams str = (tsTime, sTime)
-                        where   tsTime = read (head splitted) :: Integer
-                                sTime = read (splitted !! 1) :: Integer
-                                splitted = words str
 
 getIOGnome :: Integer -> IO Gnome
 getIOGnome num = do
@@ -34,4 +27,4 @@ main = do
         gnomesCount <- readLn
         let nums = [1..gnomesCount]
         gnomes <- mapM getIOGnome nums
-        forM_ (sort gnomes) print
+        mapM_ print (sort gnomes)
