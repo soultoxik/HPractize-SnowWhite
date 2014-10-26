@@ -3,6 +3,7 @@ module Main where
 import Data.List
 import Control.Monad
 
+
 data Gnome = Gnome {    number :: Integer,
                         toSleepTime :: Integer,
                         sleepTime :: Integer } deriving (Eq)
@@ -10,7 +11,7 @@ data Gnome = Gnome {    number :: Integer,
 instance Ord Gnome where
         compare a b = if sumSleep a > sumSleep b then LT else GT        
                 where sumSleep gnome = toSleepTime gnome + sleepTime gnome
-                
+        
 instance Show Gnome where
         show = show.number
 
@@ -20,20 +21,17 @@ parseGnomeParams str = (tsTime, sTime)
                                 sTime = read (splitted !! 1) :: Integer
                                 splitted = words str
 
-getGnomes :: forall a. (Eq a, Num a) => Integer -> a -> IO [Gnome]
-getGnomes _ 0 = return []
-getGnomes acc cnt = do
-                        line <- getLine
-                        let params = parseGnomeParams line
-                            gnome = [uncurry (Gnome acc) params]
-                        fmap (gnome ++ ) (getGnomes (acc + 1) (cnt - 1))
-                        
-getGnomesBase :: Integer -> IO [Gnome]
-getGnomesBase = getGnomes 0
+getIOGnome :: Integer -> IO Gnome
+getIOGnome num = do
+                        timeString <- getLine
+                        let     times = words timeString
+                                stTime = (read.(!!0)) times
+                                sTime = (read.(!!1)) times
+                        return (Gnome num stTime sTime)
 
 main::IO()
 main = do
         gnomesCount <- readLn
-        gnomes <- getGnomesBase gnomesCount
-        let sortedGnomes = sort gnomes
-        forM_ sortedGnomes print
+        let nums = [1..gnomesCount]
+        gnomes <- mapM getIOGnome nums
+        forM_ (sort gnomes) print
